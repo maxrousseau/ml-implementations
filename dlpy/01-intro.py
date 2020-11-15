@@ -40,14 +40,24 @@ Attributes of tensors:
 and () scalar.
 - data type (float32, float64, uint8, char #rare)
 
-For MNIST our training data is (60000, 28, 28) -> a 3D tensor, 60 000 matrices
+For MNIST our training data is (60000, 28, 28) -> a 3nD tensor, 60 000 matrices
 of 28x28 uint8 (0-255 grayscale)
 
-Tensor operations: 2.2.6(CONTINUE HERE)
+Tensor operations:
+        element wise operations
+        broadcasting
+        dot product
+        reshaping
 
-Backpropagation
+Stochastic Gradient Descent:
+        gradient is the derivatives of a tensor operation
 
-Gradient descent
+Backpropagation:
+
+Training step:
+        epochs
+        mini-batch
+
 
 In keras, to build and run a network you must define the following:
 - layers (flow of input to output data)
@@ -55,11 +65,12 @@ In keras, to build and run a network you must define the following:
 - optimizer (how the network will update itself based on how well it did ^)
 - metrics (logging the progress of the network)
 
-Chapter 3 - 
+Chapter 3 - Getting Started with Neural Networks
 ---
 
-'''
 
+
+'''
 
 from tensorflow.keras.datasets import mnist
 
@@ -73,16 +84,6 @@ from tensorflow.keras.utils import to_categorical
 print(train_images.shape)
 print(len(test_labels))
 
-# 28*28 = 512, we build a fully connected NN here (no convolutiions yet)
-# declaring the architecture by adding the layers
-network = models.Sequential()
-network.add(layers.Dense(512, activation='relu', input_shape=(28*28,)))
-network.add(layers.Dense(10, activation='softmax'))
-
-#
-network.compile(optimizer='rmsprop',
-                loss='categorical_crossentropy',
-                metrics=['accuracy'])
 
 # we have to change the input shape to fit of first layer 512
 train_images = train_images.reshape((60000, 28*28))
@@ -91,13 +92,26 @@ train_images = train_images.astype('float32') / 255
 test_images = test_images.reshape((10000, 28*28))
 test_images = test_images.astype('float32') / 255
 
+
 # changing the labels to categoricals, for classification purposes
 # this will be explained in chapter 3
 train_labels = to_categorical(train_labels)
 test_labels = to_categorical(test_labels)
 
+# 28*28 = 512, we build a fully connected NN here (no convolutiions yet)
+# declaring the architecture by adding the layers
+network = models.Sequential()
+network.add(layers.Dense(512, activation='relu', input_shape=(28*28,)))
+network.add(layers.Dense(10, activation='softmax'))
+
+# the compile step where we declare the optimizera and loss function
+network.compile(optimizer='rmsprop',
+                loss='categorical_crossentropy',
+                metrics=['accuracy'])
+
 # fitting the network
 network.fit(train_images, train_labels, epochs=5, batch_size=128)
+
 # test and print accuracy
 test_loss, test_acc = network.evaluate(test_images, test_labels)
 print('test_acc:', test_acc)
