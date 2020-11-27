@@ -68,7 +68,8 @@ In keras, to build and run a network you must define the following:
 Chapter 3 - Getting Started with Neural Networks
 ---
 
-
+> solve imdb binary classification
+> 
 
 '''
 
